@@ -32,7 +32,7 @@
   <!-- display all comments associated with the post page -->
   <br> <br>
   {% for comment in comments %}
-    <article>
+    <div class='comments'>
         <h2>
         </h2>
           <strong> {{comment.text}} </strong>
@@ -41,7 +41,7 @@
 
         <div class= "date"> {{ post.date }} </div>
         <br>
-    </article>
+    </div>
   {% endfor %}
 
 
