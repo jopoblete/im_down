@@ -3,13 +3,22 @@ head{
 }
 body{
   text-align: center;
-
 }
-
 div.event{
-
+  margin-left: 450px;
   border: 2px solid;
   border-radius: 25px;
-  width:400px;
-  height: 200px;
+  width:500px;
+  height: 150px;
+}
+
+div.date{
+  margin-left: 350px;
+}
+
+div.comments{
+  margin-left: 450px;
+  border: 2px solid;
+  width:500px;
+  height: 150px;
 }
