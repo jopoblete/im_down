@@ -5,7 +5,7 @@
     <title></title>
   </head>
   <body>
-    <h1> This is a Blog! </h1>
+    <h1> Hello Blog! </h1>
 
     <form action="/" method="post">
       <label>Title</label>
@@ -17,16 +17,16 @@
     </form>
 
 
-    {% for bulbasaur in charmander %}
+    {% for post in posts %}
       <article>
           <h2>
             <a href="{{post.url()}}">
-              {{bulbasaur.title}}
+              {{post.title}}
             </a>
           </h2>
 
-          {{bulbasaur.text}}
-          <div class= "date"> {{ bulbasaur.date }} </div>
+          {{post.text}}
+          <div class= "date"> {{ post.date }} </div>
       </article>
     {% endfor %}
 
