@@ -31,8 +31,8 @@ class Comment(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        squirtle = Post.query().fetch()
-        template_values = {'charmander':squirtle} #fetch all the posts
+        blog_posts = Post.query().fetch()
+        template_values = {'posts':blog_posts} #fetch all the posts
         template = jinja_environment.get_template('home.html')
         self.response.write(template.render(template_values))
 
