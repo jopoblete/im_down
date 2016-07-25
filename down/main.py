@@ -44,7 +44,7 @@ class MainHandler(webapp2.RequestHandler):
         title = self.request.get('title')
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(title=title, name = 'yungmarmar' text=text)
+        post = Post(title=title, name = 'yungmarmar', text=text)
         post.put()
 
 
