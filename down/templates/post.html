@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{post.title}}</title>
+  </head>
+  <body>
+
+  <h2> {{post.title}} </h2>
+
+  {{post.text}}
+
+  <br><br>
+
+  <div class='date'>{{post.date}} </div>
+
+  <h2> Leave a comment </h2>
+
+  <form  action="{{post.url() }}" method="post">
+      <textarea name='comment'></textarea>
+      <br>
+      <button> Send comment </button>
+  </form>
+
+
+
+  <!-- display all comments associated with the post page -->
+  <br> <br>
+  {% for comment in comments %}
+    <article>
+        <h2>
+        </h2>
+          <strong> {{comment.text}} </strong>
+        <br> <br> By {{comment.name}}
+
+
+        <div class= "date"> {{ post.date }} </div>
+        <br>
+    </article>
+  {% endfor %}
+
+
+
+  </body>
+
+</html>
