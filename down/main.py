@@ -53,7 +53,7 @@ class MainHandler(webapp2.RequestHandler):
 
 
         # Step 3: Render a response
-        self.redirect('/')
+        self.redirect('/home')
 
 class PostHandler(webapp2.RequestHandler):
     def get(self):
