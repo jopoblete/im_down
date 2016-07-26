@@ -1,15 +1,18 @@
-head{
-
+h1{
+  font-size: 50px;
 }
 body{
   text-align: center;
 }
 div.event{
   margin-left: 450px;
+  margin-bottom:10px;
+  margin-top:10px;
   border: 2px solid;
   border-radius: 25px;
   width:500px;
   height: 150px;
+
 }
 
 div.date{
