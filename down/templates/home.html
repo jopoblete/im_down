@@ -9,18 +9,21 @@
     <h1> I'm Down! </h1>
 
     <div class="post">
-      <form action="/" method="post">
+      <form action="/home" method="post">
+
 
         <label>Content</label><br><br>
-        <textarea maxlength='300' name="text" placeholder="Writing goes here"></textarea><br>
+          <textarea maxlength='300' name="text" placeholder="Writing goes here"></textarea><br>
 
-        <button> Post! </button>
-      </form>
-    </div class="post">
+           <button> Post! </button>
+         </form>
+       </div class="post">
 
 
     {% for post in posts %}
+
     <a href="{{post.url()}}">
+
       <div class="event">
           {{post.text}}
           <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
@@ -33,6 +36,7 @@
             {% endif %}
             :{{post.date.minute}} </div>
       </div class="event">
+
       </a>
     {% endfor %}
 
