@@ -11,20 +11,24 @@
     <div class="post">
       <form action="/" method="post">
 
-        <label>Content</label><br><br>
-        <textarea maxlength='300' name="text" placeholder="Writing goes here"></textarea><br>
 
-        <button> Post! </button>
-      </form>
-    </div class="post">
+        <label>Content</label><br><br>
+          <textarea maxlength='300' name="text" placeholder="Writing goes here"></textarea><br>
+
+           <button> Post! </button>
+         </form>
+       </div class="post">
 
 
     {% for post in posts %}
+
     <a href="{{post.url()}}">
+
       <div class="event">
           {{post.text}}
           <div class= "date"> {{ post.date }} </div>
       </div class="event">
+
       </a>
     {% endfor %}
 

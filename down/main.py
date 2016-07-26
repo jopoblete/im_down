@@ -13,8 +13,8 @@ class User(ndb.Model):
     password = ndb.TextProperty()
 
 class Post(ndb.Model):
-    user_key = ndb.TextProperty()
     text = ndb.TextProperty()
+    name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
     def url(self):
@@ -44,10 +44,11 @@ class MainHandler(webapp2.RequestHandler):
 
     def post(self):
         # Step 1: Get info from the Request
-        title = self.request.get('title')
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
+
         post = Post(name = 'yungmarmar', text=text)
+
         post.put()
 
 
