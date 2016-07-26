@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>I'm Down</title>
+    <title>Come Thru</title>
     <link rel='stylesheet' href='styles/main.css'>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -9,9 +9,23 @@
   <body>
 
 
+<<<<<<< HEAD
+
+=======
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=262415694139629";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+>>>>>>> 54e4428a0a2f1b7938d0efed8a9b958ff5380566
+
+    <h1> Come Thru</h1>
 
 
-    <h1> I'm Down! </h1>
 
 
     <!-- FACEBOOK JAVASCRIPT -->
@@ -34,11 +48,13 @@
 
     {% for post in posts %}
 
+    <div>
     <a href="{{post.url()}}">
 
       <div class="event">
           {{post.text}}
           <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+            &nbsp;&nbsp;
             {% if post.date.hour-7 > 12 %}
               {{post.date.hour-7-12}}
             {% elif post.date.hour-7 < 7 %}
@@ -46,10 +62,20 @@
             {% else %}
               {{post.date.hour-7}}
             {% endif %}
-            :{{post.date.minute}} </div>
+            :{{post.date.minute}}
+            {% if post.date.hour-7 >= 12 %}
+              pm
+            {% else %}
+              am
+            {% endif %}
+          </div>
+          <form action="/" method="post">
+            <button type="slidein" name="button">Slide in</button>
+          </form>
       </div class="event">
 
       </a>
+  </div>
     {% endfor %}
 
 

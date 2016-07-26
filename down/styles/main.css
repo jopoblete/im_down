@@ -7,6 +7,22 @@ body{
   text-decoration: none;
 }
 
+div.container {
+	display: flex;
+}
+
+.leftSide {
+  width: 70%;
+	padding: 10px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rightSide {
+  width: 30%;
+	padding: 10px;
+}
+
 textarea {
   font-size: 80%;
   resize: none;
@@ -19,37 +35,66 @@ textarea {
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
+
+
 div.event{
   padding:20px;
-  margin-left: 31%;
   margin-bottom:10px;
   margin-top:10px;
   border: 2px solid;
   border-radius: 25px;
-  width:35%;
+  width:40%;
   height: 15%;
   color:black;
   text-align:left;
   word-wrap: break-word;
+  display:inline-block;
+  background-color: white;
+}
 
+div.eventClicked{
+  padding:20px;
+  margin-bottom:10px;
+  margin-top:10px;
+  border: 2px solid;
+  border-radius: 25px;
+  width:50%;
+  height: 15%;
+  color:black;
+  text-align:left;
+  word-wrap: break-word;
+  display:inline-block;
+  background-color: white;
+}
+
+
+
+h2{
+  clear:both;
 }
 
 div.date{
-  margin-top: 15%;
+  margin-top: 5%;
   margin-left: 80%;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 div.comments{
-
-  margin-left: 33%;
   border: 2px solid;
-  width:500px;
+  width:70%;
   height: 150px;
 }
+
+textarea.commentBox{
+
+  width:200%;
+  height: 75px;
+}
+
+
 
 div.post{
   background-color: #FFD4CC;
