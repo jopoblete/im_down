@@ -58,7 +58,7 @@
               {{post.date.hour-7}}
             {% endif %}
             :{{post.date.minute}}
-            {% if post.date.hour-7 > 12 %}
+            {% if post.date.hour-7 >= 12 %}
               pm
             {% else %}
               am
