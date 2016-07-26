@@ -54,9 +54,8 @@ class Comment(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
     post_key = ndb.KeyProperty(kind=Post)
 
-class Down(ndb.Model):
+class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
-    user_key = ndb.KeyProperty(kind=User)
 
 class WelcomeHandler(webapp2.RequestHandler):
     def get(self):
@@ -94,7 +93,7 @@ class PostHandler(webapp2.RequestHandler):
         # Step 2: Logic -- interact with the database
         key = ndb.Key(urlsafe=urlsafe_key)
         post = key.get()
-
+        
         comments = Comment.query(Comment.post_key == post.key).fetch()
 
 
