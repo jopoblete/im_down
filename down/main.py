@@ -15,7 +15,6 @@ class User(ndb.Model):
 class Post(ndb.Model):
     user_key = ndb.TextProperty()
     text = ndb.TextProperty()
-    title = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
     def url(self):
@@ -29,8 +28,12 @@ class Comment(ndb.Model):
 
 class Down(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
-    user_key = ndb.KeyProperty(kind=Post)
+    user_key = ndb.KeyProperty(kind=User)
 
+class WelcomeHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('welcome.html')
+        self.response.write(template.render())
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -50,9 +53,6 @@ class MainHandler(webapp2.RequestHandler):
 
         # Step 3: Render a response
         self.redirect('/')
-
-
-
 
 class PostHandler(webapp2.RequestHandler):
     def get(self):
@@ -92,7 +92,8 @@ class PostHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
+    ('/', WelcomeHandler),
+    ('/home', MainHandler),
     ('/post', PostHandler)
 
 ], debug=True)
