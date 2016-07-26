@@ -8,10 +8,12 @@ from google.appengine.api import users
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
 
-
-
+class User(ndb.Model):
+    name = ndb.TextProperty()
+    password = ndb.TextProperty()
 
 class Post(ndb.Model):
+    user_key = ndb.TextProperty()
     text = ndb.TextProperty()
     title = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
@@ -19,14 +21,15 @@ class Post(ndb.Model):
     def url(self):
         return '/post?key='+ self.key.urlsafe() #you need to use self, not post.key.blah
 
-
-
 class Comment(ndb.Model):
     text = ndb.TextProperty()
     name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
     post_key = ndb.KeyProperty(kind=Post)
 
+class Down(ndb.Model):
+    post_key = ndb.KeyProperty(kind=Post)
+    user_key = ndb.KeyProperty(kind=Post)
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -41,7 +44,7 @@ class MainHandler(webapp2.RequestHandler):
         title = self.request.get('title')
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(title=title, text=text)
+        post = Post(title=title, name = 'yungmarmar', text=text)
         post.put()
 
 
