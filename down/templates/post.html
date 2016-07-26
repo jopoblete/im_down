@@ -7,51 +7,65 @@
   <body>
 
   <a href="/home"><button type="goback" name="button">Go Back</button> </a>
-  <div class='event'>
 
-      {{post.text}}
+  <div class='container'>
+    <div class='leftSide'>
+      <div class='eventClicked'>
 
-      <br><br>
+        {{post.text}}
 
-      <div class='date'>{{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
-          &nbsp;&nbsp;
-        {% if post.date.hour-7 > 12 %}
-          {{post.date.hour-7-12}}
-        {% elif post.date.hour-7 < 7 %}
-          {{post.date.hour-7+12}}
-        {% else %}
-          {{post.date.hour-7}}
-        {% endif %}
-        :{{post.date.minute}}
+        <br><br>
+
+        <div class='date'>{{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+            &nbsp;&nbsp;
+          {% if post.date.hour-7 > 12 %}
+            {{post.date.hour-7-12}}
+          {% elif post.date.hour-7 < 7 %}
+            {{post.date.hour-7+12}}
+          {% else %}
+            {{post.date.hour-7}}
+          {% endif %}
+          :{{post.date.minute}}
+        </div>
+
       </div>
 
-  </div>
+
+      <h3> Leave a comment </h3>
+
+      <form  action="{{post.url() }}" method="post">
+          <textarea class='commentBox' name='comment'></textarea>
+          <br>
+          <button> Send comment </button>
+      </form>
+
+      <br> <br>
+      {% for comment in comments %}
+        <div class='comments'>
+            <h2>
+            </h2>
+              <strong> {{comment.text}} </strong>
+            <br> <br> By {{comment.name}}
 
 
-  <h2> Leave a comment </h2>
-
-  <form  action="{{post.url() }}" method="post">
-      <textarea name='comment'></textarea>
-      <br>
-      <button> Send comment </button>
-  </form>
-
-
-
-  <!-- display all comments associated with the post page -->
-  <br> <br>
-  {% for comment in comments %}
-    <div class='comments'>
-        <h2>
-        </h2>
-          <strong> {{comment.text}} </strong>
-        <br> <br> By {{comment.name}}
-
-
-        <div class= "date"> {{ post.date }} </div>
-        <br>
+            <div class= "date"> {{comment.date.month}}/{{comment.date.day}}/{{ comment.date.year}} <br>
+                &nbsp;&nbsp;
+              {% if comment.date.hour-7 > 12 %}
+                {{comment.date.hour-7-12}}
+              {% elif comment.date.hour-7 < 7 %}
+                {{comment.date.hour-7+12}}
+              {% else %}
+                {{comment.date.hour-7}}
+              {% endif %}
+              :{{comment.date.minute}}  </div>
+            <br>
+        </div>
+      {% endfor %}
     </div>
-  {% endfor %}
+    <div class='rightSide'>
+      <h3>Sliders<h3>
+    </div>
+  </div>
 
 
 

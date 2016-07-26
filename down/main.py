@@ -10,6 +10,8 @@ import time
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
 
+# jinja_environment.globals.update(formatDate=formatDate)
+
 class User(ndb.Model):
     name = ndb.TextProperty()
     password = ndb.TextProperty()
