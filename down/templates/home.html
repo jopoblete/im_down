@@ -20,7 +20,7 @@
     </script>
 
     <h1> Come Thru</h1>
-    
+
 
 
 
@@ -57,10 +57,16 @@
             {% else %}
               {{post.date.hour-7}}
             {% endif %}
-            :{{post.date.minute}} </div>
-            <form action="/" method="post">
-              <button type="slidein" name="button">Slide in</button>
-            </form>
+            :{{post.date.minute}}
+            {% if post.date.hour-7 > 12 %}
+              pm
+            {% else %}
+              am
+            {% endif %}
+          </div>
+          <form action="/" method="post">
+            <button type="slidein" name="button">Slide in</button>
+          </form>
       </div class="event">
 
       </a>
