@@ -37,7 +37,8 @@ class Pacific_tzinfo(datetime.tzinfo):
 
 class User(ndb.Model):
     name = ndb.TextProperty()
-    password = ndb.TextProperty()
+    email = ndb.TextProperty()
+
 
 class Post(ndb.Model):
     text = ndb.TextProperty()
@@ -66,6 +67,22 @@ class WelcomeHandler(webapp2.RequestHandler):
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         blog_posts = Post.query().order(-Post.date).fetch()
+
+
+        user = users.get_current_user()
+        userEmail = users.get_current_user().email()
+
+        newuser = User(email='userEmail')
+
+        if user:
+            nickname = user.nickname()
+            logout_url = users.create_logout_url('/')
+            greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
+                nickname, logout_url)
+        else:
+            login_url = users.create_login_url('/')
+            greeting = '<a href="{}">Sign in</a>'.format(login_url)
+
         template_values = {'posts':blog_posts} #fetch all the posts
         template = jinja_environment.get_template('home.html')
         self.response.write(template.render(template_values))
@@ -74,14 +91,9 @@ class MainHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-
-
-
         post = Post(name = 'yungmarmar', text=text)
 
         post.put()
-
-
 
         # Step 3: Render a response
         self.redirect('/home')
