@@ -5,22 +5,29 @@
     <link rel='stylesheet' href='styles/main.css'>
   </head>
   <body>
+    <div class='eventInPost'>
 
-  <div class='event'>
+        {{post.text}}
 
-      {{post.text}}
+        <br><br>
 
-      <br><br>
+        <div class='date'>{{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+          &nbsp;&nbsp;
+          {% if post.date.hour-7 > 12 %}
+            {{post.date.hour-7-12}}
+          {% elif post.date.hour-7 < 7 %}
+            {{post.date.hour-7+12}}
+          {% else %}
+            {{post.date.hour-7}}
+          {% endif %}
+          :{{post.date.minute}}  </div>
 
-      <div class='date'>{{post.date}} </div>
-
-  </div>
-
+    </div>
 
   <h2> Leave a comment </h2>
 
   <form  action="{{post.url() }}" method="post">
-      <textarea name='comment'></textarea>
+      <textarea class='comment' name='comment'></textarea>
       <br>
       <button> Send comment </button>
   </form>
@@ -37,7 +44,16 @@
         <br> <br> By {{comment.name}}
 
 
-        <div class= "date"> {{ post.date }} </div>
+        <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+          &nbsp;&nbsp;
+          {% if post.date.hour-7 > 12 %}
+            {{post.date.hour-7-12}}
+          {% elif post.date.hour-7 < 7 %}
+            {{post.date.hour-7+12}}
+          {% else %}
+            {{post.date.hour-7}}
+          {% endif %}
+          :{{post.date.minute}} </div></div>
         <br>
     </div>
   {% endfor %}

@@ -20,6 +20,7 @@
     </script>
 
     <h1> Come Thru</h1>
+    
 
 
 
@@ -42,11 +43,13 @@
 
     {% for post in posts %}
 
+    <div>
     <a href="{{post.url()}}">
 
       <div class="event">
           {{post.text}}
           <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+            &nbsp;&nbsp;
             {% if post.date.hour-7 > 12 %}
               {{post.date.hour-7-12}}
             {% elif post.date.hour-7 < 7 %}
@@ -58,6 +61,7 @@
       </div class="event">
 
       </a>
+  </div>
     {% endfor %}
 
 
