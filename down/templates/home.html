@@ -27,7 +27,7 @@
 
 
     <div class="post">
-      <form action="/" method="post">
+      <form action="/home" method="post">
 
 
         <label>Content</label><br><br>
@@ -44,7 +44,15 @@
 
       <div class="event">
           {{post.text}}
-          <div class= "date"> {{ post.date }} </div>
+          <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+            {% if post.date.hour-7 > 12 %}
+              {{post.date.hour-7-12}}
+            {% elif post.date.hour-7 < 7 %}
+              {{post.date.hour-7+12}}
+            {% else %}
+              {{post.date.hour-7}}
+            {% endif %}
+            :{{post.date.minute}} </div>
       </div class="event">
 
       </a>
