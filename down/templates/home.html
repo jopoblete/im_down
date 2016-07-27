@@ -27,7 +27,7 @@
 
     <!-- FACEBOOK JAVASCRIPT -->
     <!-- <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div> -->
-      <!-- FACEBOOK JAVASCRIPT -->
+      <!-- FACEBOOK JAVASCRIPsdfT -->
 
 
 
@@ -40,15 +40,16 @@
     </div class="post">
 
 
-      <img src="{{plus_user_image}}">
-      <!-- GOOGLE PLUS IMAGE -->
+
 
 
     {% for post in posts %}
-
     <div class="wholeEvent">
       <div class='profilePic'>
-        <img src="{{plus_user_image}}" height='75px' width='75px'>
+        <div class="displayName">
+          {{post.user_key.get().name}}
+        </div>
+        <img src="{{post.user_key.get().picture_url}}" height='75px' width='75px'>
       </div>
       <div class='eventText'>
       <a href="{{post.url()}}">
