@@ -75,34 +75,40 @@ class WelcomeHandler(webapp2.RequestHandler):
             greeting = '<a href="{}">Sign in</a>'.format(login_url)
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
-            http = decorator.http()
-            plus_user = service.people().get(userId='me').execute(http=http)
+
             template = jinja_environment.get_template('welcome.html')
-            self.response.write(template.render(
-                {'plus_user_image': plus_user['image']['url']}))
+            self.response.write(template.render())
 
 
 
 class MainHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
 
         user = users.get_current_user()
         if user: #if there is a user, welcome user, and option to sign out
+
+            http = decorator.http()
+            plus_user = service.people().get(userId='me').execute(http=http)
+
             nickname = user.nickname()
             logout_url = users.create_logout_url('/home')
             greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
-                nickname, logout_url)
+                plus_user['displayName'], logout_url)
 
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
-               
+
             blog_posts = Post.query().order(-Post.date).fetch()
             user = users.get_current_user()
             userEmail = users.get_current_user().email()
 
             newuser = User(email=userEmail)
 
-            template_values = {'posts':blog_posts} #fetch all the posts
+
+
+            template_values = {'posts':blog_posts, 'plus_user_image': plus_user['image']['url'], } #fetch all the posts
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
