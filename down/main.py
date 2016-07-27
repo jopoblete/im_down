@@ -62,7 +62,7 @@ class WelcomeHandler(webapp2.RequestHandler):
 
     @decorator.oauth_required
     def get(self):
-        # Authenticate and construct service.
+        # Authenticate and construct service.d
         # service, flags = sample_tools.init(
         #     [], 'plus', 'v1', __doc__, "/Users/demouser/Desktop/cssi/im_down/down/lib",
         #     scope='https://www.googleapis.com/auth/plus.me')
