@@ -1,4 +1,3 @@
-
 import webapp2
 import jinja2
 import os
@@ -6,6 +5,26 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 import datetime
 import time
+from oauth2client import client
+from googleapiclient import sample_tools
+import httplib2
+import logging
+import os
+import pickle
+
+from googleapiclient import discovery
+from oauth2client import client
+from oauth2client.contrib import appengine
+from google.appengine.api import memcache
+
+CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
+
+http = httplib2.Http(memcache)
+service = discovery.build("plus", "v1", http=http)
+decorator = appengine.oauth2decorator_from_clientsecrets(
+    CLIENT_SECRETS,
+    scope='https://www.googleapis.com/auth/plus.me',
+    message="Client secrets is missing")
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
@@ -36,9 +55,18 @@ class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
 
 class WelcomeHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
+        # Authenticate and construct service.
+        # service, flags = sample_tools.init(
+        #     [], 'plus', 'v1', __doc__, "/Users/demouser/Desktop/cssi/im_down/down/lib",
+        #     scope='https://www.googleapis.com/auth/plus.me')
+        http = decorator.http()
+        plus_user = service.people().get(userId='me').execute(http=http)
         template = jinja_environment.get_template('welcome.html')
-        self.response.write(template.render())
+        self.response.write(template.render(
+            {'plus_user_image': plus_user['image']['url']}))
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -48,16 +76,7 @@ class MainHandler(webapp2.RequestHandler):
         user = users.get_current_user()
         userEmail = users.get_current_user().email()
 
-        newuser = User(email='userEmail')
-
-        if user:
-            nickname = user.nickname()
-            logout_url = users.create_logout_url('/')
-            greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
-                nickname, logout_url)
-        else:
-            login_url = users.create_login_url('/')
-            greeting = '<a href="{}">Sign in</a>'.format(login_url)
+        newuser = User(email=userEmail)
 
         template_values = {'posts':blog_posts} #fetch all the posts
         template = jinja_environment.get_template('home.html')
@@ -115,6 +134,7 @@ class PostHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
     ('/home', MainHandler),
-    ('/post', PostHandler)
+    ('/post', PostHandler),
+    (decorator.callback_path, decorator.callback_handler())
 
 ], debug=True)
