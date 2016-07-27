@@ -33,10 +33,7 @@
 
     <div class="post">
       <form action="/home" method="post">
-
-
-        <label>Content</label><br><br>
-          <textarea maxlength='300' name="text" placeholder="Writing goes here"></textarea><br>
+          <textarea maxlength='300' name="text" placeholder="I want to..."></textarea><br>
 
            <button> Post! </button>
          </form>
@@ -53,14 +50,18 @@
           <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
             &nbsp;&nbsp;
             {% if post.date.hour-7 > 12 %}
-              {{post.date.hour-7-12}}
+              {{post.date.hour-7-12}}:
             {% elif post.date.hour-7 < 7 %}
-              {{post.date.hour-7+12}}
+              {{post.date.hour-7+12}}:
             {% else %}
-              {{post.date.hour-7}}
+              {{post.date.hour-7}}:
             {% endif %}
-            :{{post.date.minute}}
-            {% if post.date.hour-7 >= 12 %}
+            {% if post.date.minute < 10 %}
+              0{{post.date.minute}}
+            {% else %}
+              {{post.date.minute}}
+            {% endif %}
+            {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
               pm
             {% else %}
               am

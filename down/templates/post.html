@@ -6,10 +6,10 @@
   </head>
   <body>
 
-  <a href="/home"><button type="goback" name="button">Go Back</button> </a>
 
   <div class='container'>
     <div class='leftSide'>
+      <a href="/home"><button type="goback" name="button">Go Back</button> </a>
       <div class='eventClicked'>
 
         {{post.text}}
@@ -24,8 +24,12 @@
           {% else %}
             {{post.date.hour-7}}
           {% endif %}
-          :{{post.date.minute}}
-          {% if post.date.hour-7 >= 12 %}
+            {% if post.date.minute < 10 %}
+              :0{{post.date.minute}}
+            {% else %}
+              :{{post.date.minute}}
+            {% endif %}
+          {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
             pm
           {% else %}
             am
@@ -62,8 +66,12 @@
               {% else %}
                 {{comment.date.hour-7}}
               {% endif %}
-              :{{comment.date.minute}}
-              {% if comment.date.hour-7 >= 12 %}
+                {% if post.date.minute < 10 %}
+                  :0{{post.date.minute}}
+                {% else %}
+                  :{{post.date.minute}}
+                {% endif %}
+              {% if comment.date.hour-7 >= 12 or post.date.hour < 7 %}
                 pm
               {% else %}
                 am

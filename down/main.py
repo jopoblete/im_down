@@ -32,8 +32,12 @@ jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_d
 # jinja_environment.globals.update(formatDate=formatDate)
 
 class User(ndb.Model):
-    name = ndb.TextProperty()
-    email = ndb.TextProperty()
+    name = ndb.StringProperty()
+    email = ndb.StringProperty()
+    picture=ndb.BlobProperty()
+    def url(self):
+        url='/user?key='+self.key.urlsafe()
+        return url
 
 
 class Post(ndb.Model):
@@ -71,8 +75,6 @@ class WelcomeHandler(webapp2.RequestHandler):
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         blog_posts = Post.query().order(-Post.date).fetch()
-
-
         user = users.get_current_user()
         userEmail = users.get_current_user().email()
 
@@ -92,6 +94,7 @@ class MainHandler(webapp2.RequestHandler):
 
         # Step 3: Render a response
         self.redirect('/home')
+
 
 class PostHandler(webapp2.RequestHandler):
     def get(self):
