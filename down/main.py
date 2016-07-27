@@ -124,7 +124,7 @@ class MainHandler(webapp2.RequestHandler):
 
             template_values = {'posts':blog_posts} #fetch all the posts
 
-            template = jinja_enviornment.get_template('home.html')
+            template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
         else: #no user, option sign in
