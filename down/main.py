@@ -64,6 +64,7 @@ class Comment(ndb.Model):
     name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
     post_key = ndb.KeyProperty(kind=Post)
+    user_key = ndb.KeyProperty(kind=User)
 
 class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
@@ -134,6 +135,8 @@ class MainHandler(webapp2.RequestHandler):
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
         urlsafe_key = self.request.get('key')
 
@@ -142,16 +145,15 @@ class PostHandler(webapp2.RequestHandler):
         post = key.get()
 
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
-        http = decorator.http()
-        plus_user = service.people().get(userId='me').execute(http=http)
-
 
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments,'plus_user_image': plus_user['image']['url'], 'plus_user_displayName':plus_user['displayName']} #fetch all the posts
+        template_values = {'post':post, 'comments':comments} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
     def post(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
         text = self.request.get('comment') #the comment string
         post_key_urlsafe = self.request.get('key') #string thats coming out of the request
@@ -160,16 +162,11 @@ class PostHandler(webapp2.RequestHandler):
         post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
         post = post_key.get() #turns into the entity ( the post )
 
-        comment = Comment(text=text, name= 'Loser', post_key=post.key)
+        comment = Comment(text=text, name= user_model.name, post_key=post.key, user_key=user_model.key)
         comment.put()
-
-
-
 
         # Step 3: Render a response
         self.redirect(post.url())
-
-
 
 app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
