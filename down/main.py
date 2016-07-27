@@ -23,7 +23,7 @@ http = httplib2.Http(memcache)
 service = discovery.build("plus", "v1", http=http)
 decorator = appengine.oauth2decorator_from_clientsecrets(
     CLIENT_SECRETS,
-    scope='https://www.googleapis.com/auth/plus.me',
+    scope=['https://www.googleapis.com/auth/plus.me','https://www.googleapis.com/auth/plus.login'],
     message="Client secrets is missing")
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -58,6 +58,9 @@ class Comment(ndb.Model):
 class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
 
+
+
+
 class WelcomeHandler(webapp2.RequestHandler):
 
     @decorator.oauth_required
@@ -88,8 +91,10 @@ class MainHandler(webapp2.RequestHandler):
 
         user = users.get_current_user()
         if user: #if there is a user, welcome user, and option to sign out
-
             http = decorator.http()
+            friends = service.people().list(userId='me', collection='connected').execute(http=http)
+            logging.info(friends)
+
             plus_user = service.people().get(userId='me').execute(http=http)
 
             nickname = user.nickname()
@@ -107,8 +112,7 @@ class MainHandler(webapp2.RequestHandler):
             newuser = User(email=userEmail)
 
 
-
-            template_values = {'posts':blog_posts, 'plus_user_image': plus_user['image']['url'], } #fetch all the posts
+            template_values = {'posts':blog_posts, 'plus_user_image': plus_user['image']['url'] } #fetch all the posts
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
