@@ -8,8 +8,6 @@
   </head>
   <body>
 
-
-
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -33,27 +31,32 @@
 
     <div class="post">
       <form action="/home" method="post">
-          <textarea maxlength='300' name="text" placeholder="I want to..."></textarea><br>
+        <textarea maxlength='300' name="text" placeholder="I want to..."></textarea><br>
 
-           <button> Post! </button>
-         </form>
-       </div class="post">
+        <button> Post! </button>
+      </form>
+    </div class="post">
 
 
     {% for post in posts %}
 
-    <div>
-    <a href="{{post.url()}}">
+    <div class="wholeEvent">
+      <div class='profilePic'>
+        <img src="{{plus_user_image}}" height='75px' width='75px'>
+      </div>
+      <div class='eventText'>
+      <a href="{{post.url()}}">
 
       <div class="event">
-          {{post.text}}
-          <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
-            &nbsp;&nbsp;
-            {% if post.date.hour-7 > 12 %}
-              {{post.date.hour-7-12}}:
-            {% elif post.date.hour-7 < 7 %}
-              {{post.date.hour-7+12}}:
-            {% else %}
+
+        {{post.text}}
+        <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+          &nbsp;&nbsp;
+          {% if post.date.hour-7 > 12 %}
+            {{post.date.hour-7-12}}:
+          {% elif post.date.hour-7 < 7 %}
+            {{post.date.hour-7+12}}:
+          {% else %}
               {{post.date.hour-7}}:
             {% endif %}
             {% if post.date.minute < 10 %}
@@ -73,7 +76,9 @@
       </div class="event">
 
       </a>
-  </div>
+    </div>
+</div>
+</div>
     {% endfor %}
 
 

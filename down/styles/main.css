@@ -15,6 +15,7 @@ h1{
   background:-ms-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
   background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
 }
+
 body{
   text-align: center;
   text-decoration: none;
@@ -58,6 +59,19 @@ textarea {
   padding: 5px 8px;
   transition: background-color 0.2s ease 0s;
 }
+
+.wholeEvent{
+}
+.profilePic{
+  display: inline-block;
+  margin-right: 3%;
+}
+.eventText{
+  display: inline;
+  margin-right: 10%;
+
+}
+
 
 
 div.event{

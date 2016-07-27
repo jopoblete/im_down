@@ -73,14 +73,16 @@ class WelcomeHandler(webapp2.RequestHandler):
             {'plus_user_image': plus_user['image']['url']}))
 
 class MainHandler(webapp2.RequestHandler):
+    @decorator.oauth_required
     def get(self):
         blog_posts = Post.query().order(-Post.date).fetch()
         user = users.get_current_user()
         userEmail = users.get_current_user().email()
 
         newuser = User(email=userEmail)
-
-        template_values = {'posts':blog_posts} #fetch all the posts
+        http = decorator.http()
+        plus_user = service.people().get(userId='me').execute(http=http)
+        template_values = {'posts':blog_posts,'plus_user_image': plus_user['image']['url']} #fetch all the posts
         template = jinja_environment.get_template('home.html')
         self.response.write(template.render(template_values))
 
