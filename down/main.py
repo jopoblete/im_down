@@ -31,7 +31,7 @@ jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_d
 
 # jinja_environment.globals.update(formatDate=formatDate)
 
-class User(ndb.Model):
+class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
     email = ndb.StringProperty()
     picture=ndb.BlobProperty()
@@ -66,23 +66,48 @@ class WelcomeHandler(webapp2.RequestHandler):
         # service, flags = sample_tools.init(
         #     [], 'plus', 'v1', __doc__, "/Users/demouser/Desktop/cssi/im_down/down/lib",
         #     scope='https://www.googleapis.com/auth/plus.me')
-        http = decorator.http()
-        plus_user = service.people().get(userId='me').execute(http=http)
-        template = jinja_environment.get_template('welcome.html')
-        self.response.write(template.render(
-            {'plus_user_image': plus_user['image']['url']}))
+        user = users.get_current_user()
+        if user:
+            self.redirect('/home')
+
+        else:
+            login_url = users.create_login_url('/')
+            greeting = '<a href="{}">Sign in</a>'.format(login_url)
+            self.response.write(
+               '<html><body>{}</body></html>'.format(greeting))
+            http = decorator.http()
+            plus_user = service.people().get(userId='me').execute(http=http)
+            template = jinja_environment.get_template('welcome.html')
+            self.response.write(template.render(
+                {'plus_user_image': plus_user['image']['url']}))
+
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        blog_posts = Post.query().order(-Post.date).fetch()
+
         user = users.get_current_user()
-        userEmail = users.get_current_user().email()
+        if user: #if there is a user, welcome user, and option to sign out
+            nickname = user.nickname()
+            logout_url = users.create_logout_url('/home')
+            greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
+                nickname, logout_url)
 
-        newuser = User(email=userEmail)
+            self.response.write(
+               '<html><body>{}</body></html>'.format(greeting))
+               
+            blog_posts = Post.query().order(-Post.date).fetch()
+            user = users.get_current_user()
+            userEmail = users.get_current_user().email()
 
-        template_values = {'posts':blog_posts} #fetch all the posts
-        template = jinja_environment.get_template('home.html')
-        self.response.write(template.render(template_values))
+            newuser = User(email=userEmail)
+
+            template_values = {'posts':blog_posts} #fetch all the posts
+            template = jinja_environment.get_template('home.html')
+            self.response.write(template.render(template_values))
+
+        else: #no user, option sign in
+            self.redirect('/')
 
     def post(self):
         # Step 1: Get info from the Request
