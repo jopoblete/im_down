@@ -90,10 +90,13 @@ div.comments{
 
 textarea.commentBox{
 
-  width:200%;
+  width:70%;
   height: 75px;
 }
 
+.commentSpace{
+  width:100%;
+}
 
 
 div.post{

@@ -34,14 +34,15 @@
 
       </div>
 
+      <div class='commentSpace'>
+        <h3> Leave a comment </h3>
 
-      <h3> Leave a comment </h3>
-
-      <form  action="{{post.url() }}" method="post">
-          <textarea class='commentBox' name='comment'></textarea>
-          <br>
-          <button> Send comment </button>
-      </form>
+        <form  action="{{post.url() }}" method="post">
+            <textarea class='commentBox' name='comment'></textarea>
+            <br>
+            <button> Send comment </button>
+        </form>
+      </div>
 
       <br> <br>
       {% for comment in comments %}
