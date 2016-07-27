@@ -38,14 +38,16 @@
     </div class="post">
 
 
-      <img src="{{plus_user_image}}">
-      <!-- GOOGLE PLUS IMAGE -->
+  
 
 
     {% for post in posts %}
 
     <div class="wholeEvent">
       <div class='profilePic'>
+        <div class="displayName">
+          {{plus_user_displayName}}
+        </div>
         <img src="{{plus_user_image}}" height='75px' width='75px'>
       </div>
       <div class='eventText'>
