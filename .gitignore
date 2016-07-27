@@ -1,2 +1,4 @@
 down/main.pyc
 .DS_Store
+down/lib/six.pyc
+down/appengine_config.pyc
