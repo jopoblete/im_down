@@ -1,7 +1,21 @@
 
 h1{
   font-size: 300%;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+  color:white;
+  background-color: lightblue;
+  margin-top:0;
+  -moz-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fc8d83), color-stop(1, #e4685d));
+  background:-moz-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-webkit-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-o-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-ms-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
 }
+
 body{
   text-align: center;
   text-decoration: none;
@@ -24,17 +38,40 @@ div.container {
 }
 
 textarea {
-  font-size: 80%;
-  resize: none;
+  resize :none;
   width: 80%;
-	height: 60px;
-	border: 3px solid;
-	padding: 10px;
-	font-family: Tahoma, sans-serif;
-	background-image: url(bg.gif);
-	background-position: bottom right;
-	background-repeat: no-repeat;
+  height: 75px;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+
+  border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+  border-image: none;
+  border-radius: 6px 6px 6px 6px;
+  border-style: none solid solid none;
+  border-width: medium 1px 1px medium;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+  color: #555555;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1em;
+  line-height: 1.4em;
+  padding: 5px 8px;
+  transition: background-color 0.2s ease 0s;
 }
+
+.wholeEvent{
+}
+.profilePic{
+  display: inline-block;
+  margin-right: 3%;
+}
+.eventText{
+  display: inline;
+  margin-right: 10%;
+
+}
+
 
 
 div.event{
@@ -42,7 +79,7 @@ div.event{
   margin-bottom:10px;
   margin-top:10px;
   border: 2px solid;
-  border-radius: 25px;
+  border-radius: 20px;
   width:40%;
   height: 15%;
   color:black;
@@ -57,7 +94,7 @@ div.eventClicked{
   margin-bottom:10px;
   margin-top:10px;
   border: 2px solid;
-  border-radius: 25px;
+  border-radius: 20px;
   width:50%;
   height: 15%;
   color:black;
@@ -66,7 +103,6 @@ div.eventClicked{
   display:inline-block;
   background-color: white;
 }
-
 
 
 h2{
@@ -90,7 +126,7 @@ div.comments{
 
 textarea.commentBox{
 
-  width:70%;
+  width:65%;
   height: 75px;
 }
 
