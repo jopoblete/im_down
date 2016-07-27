@@ -30,11 +30,20 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
 
 # jinja_environment.globals.update(formatDate=formatDate)
+def getOrCreateUser(emailAddress):
+    user=User.query(User.email==emailAddress).get()
+    if not user:
+        http = decorator.http()
+        plus_user = service.people().get(userId='me').execute(http=http)
+        user=User(email=emailAddress, name=plus_user['displayName'], picture_url=plus_user['image']['url'])
+        user.put()
+    return user
 
 class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
     email = ndb.StringProperty()
-    picture=ndb.BlobProperty()
+    picture_url = ndb.StringProperty()
+
     def url(self):
         url='/user?key='+self.key.urlsafe()
         return url
@@ -44,6 +53,7 @@ class Post(ndb.Model):
     text = ndb.TextProperty()
     name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
+    user_key=ndb.KeyProperty(kind=User)
 
     def url(self):
         return '/post?key='+ self.key.urlsafe() #you need to use self, not post.key.blah
@@ -89,26 +99,18 @@ class MainHandler(webapp2.RequestHandler):
         user = users.get_current_user()
         if user: #if there is a user, welcome user, and option to sign out
 
-            http = decorator.http()
-            plus_user = service.people().get(userId='me').execute(http=http)
+            user_model = getOrCreateUser(user.email())
 
-            nickname = user.nickname()
             logout_url = users.create_logout_url('/home')
             greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
-                plus_user['displayName'], logout_url)
+                user_model.name, logout_url)
 
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
 
             blog_posts = Post.query().order(-Post.date).fetch()
-            user = users.get_current_user()
-            userEmail = users.get_current_user().email()
 
-            newuser = User(email=userEmail)
-
-
-
-            template_values = {'posts':blog_posts, 'plus_user_image': plus_user['image']['url'], } #fetch all the posts
+            template_values = {'posts':blog_posts} #fetch all the posts
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
@@ -116,10 +118,12 @@ class MainHandler(webapp2.RequestHandler):
             self.redirect('/')
 
     def post(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(name = 'yungmarmar', text=text)
+        post = Post(name = user_model.name, text=text, user_key=user_model.key)
 
         post.put()
 
@@ -128,6 +132,7 @@ class MainHandler(webapp2.RequestHandler):
 
 
 class PostHandler(webapp2.RequestHandler):
+    @decorator.oauth_required
     def get(self):
         # Step 1: Get info from the Request
         urlsafe_key = self.request.get('key')
@@ -137,11 +142,12 @@ class PostHandler(webapp2.RequestHandler):
         post = key.get()
 
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
-
+        http = decorator.http()
+        plus_user = service.people().get(userId='me').execute(http=http)
 
 
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments} #fetch all the posts
+        template_values = {'post':post, 'comments':comments,'plus_user_image': plus_user['image']['url'], 'plus_user_displayName':plus_user['displayName']} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
