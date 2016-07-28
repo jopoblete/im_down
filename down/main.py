@@ -31,20 +31,15 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
 
 # jinja_environment.globals.update(formatDate=formatDate)
+
+
 def getOrCreateUser(emailAddress):
+
     user=User.query(User.email==emailAddress).get()
+
     if not user:
         http = decorator.http()
         plus_user = service.people().get(userId='me').execute(http=http)
-
-        # friends = service.people().list(userId='me', collection='visible').execute(http=http) # list of all friends
-        # friends_ids = []
-        #
-        # for friend in friends:  #loop will create a list of all the user's friends' IDs
-        #     single_id = friend['id']
-        #     friends_ids.append(single_id)
-
-
 
         friends = service.people().list(userId='me', collection='visible').execute(http=http)['items'] # list of all friends
 
@@ -52,11 +47,25 @@ def getOrCreateUser(emailAddress):
 
         for friend in friends:  #loop will create a list of all the user's friends' IDs
             friends_ids.append(friend['id'])
-            print friend['id']
 
-        user=User(email=emailAddress, friends_list = friends_ids, name=plus_user['displayName'], picture_url=plus_user['image']['url'])
+
+        user=User(email=emailAddress, friends_list = friends_ids, name = plus_user['displayName'], picture_url=plus_user['image']['url'])
         user.put()
+
     return user
+
+def updateFriendsList(currentUser):
+    http = decorator.http()
+    friends = service.people().list(userId='me', collection='visible').execute(http=http)['items']
+    plus_user = service.people().get(userId='me').execute(http=http)
+
+    friends_ids = [plus_user['id']]
+
+    for friend in friends:  #loop will create a list of all the user's friends' IDs
+        friends_ids.append(friend['id'])
+
+    currentUser.friends_list = friends_ids
+
 
 class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
@@ -130,6 +139,8 @@ class MainHandler(webapp2.RequestHandler):
             http = decorator.http()
             plus_user = service.people().get(userId='me').execute(http=http)
 
+            updateFriendsList(user)
+
 
             user_model = getOrCreateUser(user.email())
 
@@ -152,7 +163,7 @@ class MainHandler(webapp2.RequestHandler):
 
             # go through all the blog_posts and pick only the ones that were made by a friend
 
-            template_values = {'posts':friends_posts} #fetch all the posts
+            template_values = {'posts':friends_posts, 'plus_user':plus_user} #fetch all the posts
 
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
