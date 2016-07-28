@@ -11,6 +11,7 @@ import httplib2
 import logging
 import os
 import pickle
+import pprint
 
 from googleapiclient import discovery
 from oauth2client import client
@@ -43,6 +44,7 @@ class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
     email = ndb.StringProperty()
     picture_url = ndb.StringProperty()
+    
 
     def url(self):
         url='/user?key='+self.key.urlsafe()
@@ -68,9 +70,7 @@ class Comment(ndb.Model):
 
 class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
-
-
-
+    user_key = ndb.KeyProperty(kind=User)
 
 class WelcomeHandler(webapp2.RequestHandler):
 
@@ -104,8 +104,11 @@ class MainHandler(webapp2.RequestHandler):
         if user: #if there is a user, welcome user, and option to sign out
 
             http = decorator.http()
-            friends = service.people().list(userId='me', collection='connected').execute(http=http)
-            logging.info(friends)
+            logging.info(help(service.people().list))
+            friends = service.people().list(userId='me', collection='visible').execute(http=http)
+            logging.info(pprint.pprint(friends))
+
+            # put ids of friends into a list
 
             plus_user = service.people().get(userId='me').execute(http=http)
 
@@ -122,6 +125,7 @@ class MainHandler(webapp2.RequestHandler):
 
             blog_posts = Post.query().order(-Post.date).fetch()
 
+            # go through all the blog_posts and pick only the ones that were made by a friend
 
             template_values = {'posts':blog_posts, 'plus_user':plus_user} #fetch all the posts
 
@@ -174,7 +178,6 @@ class PostHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('comment') #the comment string
         post_key_urlsafe = self.request.get('key') #string thats coming out of the request
-
         # Step 2: Logic -- interact with the database
         post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
         post = post_key.get() #turns into the entity ( the post )
