@@ -31,19 +31,49 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
 
 # jinja_environment.globals.update(formatDate=formatDate)
+
+
 def getOrCreateUser(emailAddress):
+
     user=User.query(User.email==emailAddress).get()
+
     if not user:
         http = decorator.http()
         plus_user = service.people().get(userId='me').execute(http=http)
-        user=User(email=emailAddress, name=plus_user['displayName'], picture_url=plus_user['image']['url'])
+
+        friends = service.people().list(userId='me', collection='visible').execute(http=http)['items'] # list of all friends
+
+        friends_ids = [plus_user['id']]
+
+        for friend in friends:  #loop will create a list of all the user's friends' IDs
+            friends_ids.append(friend['id'])
+
+
+        user=User(email=emailAddress, friends_list = friends_ids, name = plus_user['displayName'], picture_url=plus_user['image']['url'])
         user.put()
+
     return user
+
+def updateFriendsList(currentUser):
+    http = decorator.http()
+    friends = service.people().list(userId='me', collection='visible').execute(http=http)['items']
+    plus_user = service.people().get(userId='me').execute(http=http)
+
+    friends_ids = [plus_user['id']]
+
+    for friend in friends:  #loop will create a list of all the user's friends' IDs
+        friends_ids.append(friend['id'])
+
+    currentUser.friends_list = friends_ids
+
 
 class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
     email = ndb.StringProperty()
     picture_url = ndb.StringProperty()
+    google_ID = ndb.StringProperty()
+    friends_list = ndb.StringProperty(repeated=True)
+
 
 
     def url(self):
@@ -55,6 +85,7 @@ class Post(ndb.Model):
     text = ndb.TextProperty()
     name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
+    google_plusID = ndb.StringProperty()
     user_key=ndb.KeyProperty(kind=User)
     slideCount=ndb.IntegerProperty()
     sliderList=ndb.StringProperty(repeated=True)
@@ -106,44 +137,53 @@ class MainHandler(webapp2.RequestHandler):
         if user: #if there is a user, welcome user, and option to sign out
 
             http = decorator.http()
-            logging.info(help(service.people().list))
-            friends = service.people().list(userId='me', collection='visible').execute(http=http)
-            logging.info(pprint.pprint(friends))
-
-            # put ids of friends into a list
-
             plus_user = service.people().get(userId='me').execute(http=http)
+
+            updateFriendsList(user)
 
 
             user_model = getOrCreateUser(user.email())
 
-
+            #greeting on top of the page and signout button
             logout_url = users.create_logout_url('/home')
             greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
                 user_model.name, logout_url)
-
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
 
-            blog_posts = Post.query().order(-Post.date).fetch()
+
+
+            blog_posts = Post.query().order(-Post.date).fetch() # return list
+
+            friends_posts = []
+
+            for post in blog_posts:
+                if post.google_plusID in user_model.friends_list:
+                        friends_posts.append(post)
 
             # go through all the blog_posts and pick only the ones that were made by a friend
 
-            template_values = {'posts':blog_posts, 'plus_user':plus_user, 'user':user} #fetch all the posts
-
+            template_values = {'posts':friends_posts, 'plus_user':plus_user, 'user':user} #fetch all the posts
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
         else: #no user, option sign in
             self.redirect('/')
 
+
+    @decorator.oauth_required
     def post(self):
+        http = decorator.http()
+        plus_user = service.people().get(userId='me').execute(http=http)
+
         user = users.get_current_user()
         user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(name = user_model.name, text=text, user_key=user_model.key, slideCount=0, sliderList=[])
+        post = Post(name = user_model.name, text=text, user_key=user_model.key, google_plusID= plus_user['id'], slideCount = 0, sliderList=[])
+        #google_plusID property takes current user ID and attaches it to the new post
+
 
         post.put()
         # Step 3: Render a response

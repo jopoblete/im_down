@@ -15,3 +15,9 @@ indexes:
   - name: post_key
   - name: date
     direction: desc
+
+- kind: Post
+  properties:
+  - name: google_plusID
+  - name: date
+    direction: desc
