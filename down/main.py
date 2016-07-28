@@ -129,7 +129,7 @@ class MainHandler(webapp2.RequestHandler):
 
             # go through all the blog_posts and pick only the ones that were made by a friend
 
-            template_values = {'posts':blog_posts} #fetch all the posts
+            template_values = {'posts':blog_posts, 'plus_user':plus_user} #fetch all the posts
 
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
@@ -146,7 +146,6 @@ class MainHandler(webapp2.RequestHandler):
         post = Post(name = user_model.name, text=text, user_key=user_model.key, slideCount=0)
 
         post.put()
-
         # Step 3: Render a response
         self.redirect('/home')
 
@@ -159,6 +158,14 @@ class MainHandler(webapp2.RequestHandler):
         post.put()
         self.redirect('/home')
 
+
+
+class DeleteHandler(webapp2.RequestHandler):
+    def post(self):
+        urlsafe_key = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        key.delete()
+        self.redirect('/home')
 
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
@@ -200,6 +207,7 @@ app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
+    ('/delete', DeleteHandler),
     (decorator.callback_path, decorator.callback_handler())
 
 ], debug=True)
