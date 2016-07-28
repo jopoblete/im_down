@@ -105,14 +105,11 @@ class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
     user_key = ndb.KeyProperty(kind=User)
 
-class WelcomeHandler(webapp2.RequestHandler):
+class LoginHandler(webapp2.RequestHandler):
 
     @decorator.oauth_required
     def get(self):
-        # Authenticate and construct service.d
-        # service, flags = sample_tools.init(
-        #     [], 'plus', 'v1', __doc__, "/Users/demouser/Desktop/cssi/im_down/down/lib",
-        #     scope='https://www.googleapis.com/auth/plus.me')
+
         user = users.get_current_user()
         if user:
             self.redirect('/home')
@@ -123,8 +120,8 @@ class WelcomeHandler(webapp2.RequestHandler):
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
 
-            template = jinja_environment.get_template('welcome.html')
-            self.response.write(template.render())
+            # template = jinja_environment.get_template('welcome.html')
+            # self.response.write(template.render())
 
 
 
@@ -264,7 +261,7 @@ class FlakeHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/', WelcomeHandler),
+    ('/', LoginHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),

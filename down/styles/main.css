@@ -16,10 +16,11 @@ h1{
 }
 
 body{
-  
+  background-color:#FFF0F0;
   text-align: center;
   text-decoration: none;
 }
+
 
 div.container {
 	display: flex;
