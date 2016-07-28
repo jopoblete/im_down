@@ -44,7 +44,7 @@ class User(ndb.Model): #give u a user object and the plus user if logged in
     name = ndb.StringProperty()
     email = ndb.StringProperty()
     picture_url = ndb.StringProperty()
-    
+
 
     def url(self):
         url='/user?key='+self.key.urlsafe()
@@ -56,6 +56,8 @@ class Post(ndb.Model):
     name = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
     user_key=ndb.KeyProperty(kind=User)
+    slideCount=ndb.IntegerProperty()
+    sliderList=ndb.StringProperty(repeated=True)
 
     def url(self):
         return '/post?key='+ self.key.urlsafe() #you need to use self, not post.key.blah
@@ -141,11 +143,20 @@ class MainHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(name = user_model.name, text=text, user_key=user_model.key)
+        post = Post(name = user_model.name, text=text, user_key=user_model.key, slideCount=0)
 
         post.put()
 
         # Step 3: Render a response
+        self.redirect('/home')
+
+    def slideIn(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
+        post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
+        post = post_key.get()
+        post.slideCount=post.slideCount+1
+        post.put()
         self.redirect('/home')
 
 
@@ -183,6 +194,7 @@ class PostHandler(webapp2.RequestHandler):
 
         # Step 3: Render a response
         self.redirect(post.url())
+
 
 app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
