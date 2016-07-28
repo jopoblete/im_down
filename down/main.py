@@ -105,14 +105,11 @@ class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
     user_key = ndb.KeyProperty(kind=User)
 
-class WelcomeHandler(webapp2.RequestHandler):
+class LoginHandler(webapp2.RequestHandler):
 
     @decorator.oauth_required
     def get(self):
-        # Authenticate and construct service.d
-        # service, flags = sample_tools.init(
-        #     [], 'plus', 'v1', __doc__, "/Users/demouser/Desktop/cssi/im_down/down/lib",
-        #     scope='https://www.googleapis.com/auth/plus.me')
+
         user = users.get_current_user()
         if user:
             self.redirect('/home')
@@ -123,8 +120,8 @@ class WelcomeHandler(webapp2.RequestHandler):
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
 
-            template = jinja_environment.get_template('welcome.html')
-            self.response.write(template.render())
+            # template = jinja_environment.get_template('welcome.html')
+            # self.response.write(template.render())
 
 
 
@@ -210,6 +207,7 @@ class DeleteCommentHandler(webapp2.RequestHandler):
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
+        sliders=[]
         user = users.get_current_user()
         user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
@@ -218,11 +216,14 @@ class PostHandler(webapp2.RequestHandler):
         # Step 2: Logic -- interact with the database
         key = ndb.Key(urlsafe=urlsafe_key)
         post = key.get()
+        for sliderEmail in post.sliderList:
+            slider=getOrCreateUser(sliderEmail)
+            sliders.append(slider)
 
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
-
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments, 'user':user} #fetch all the posts
+
+        template_values = {'post':post, 'comments':comments, 'sliders':sliders} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
@@ -275,7 +276,7 @@ class FlakeHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/', WelcomeHandler),
+    ('/', LoginHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),
