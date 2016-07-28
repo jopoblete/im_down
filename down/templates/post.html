@@ -85,8 +85,11 @@
     <div class='rightSide'>
       <h3>Sliders<h3>
       {% for slider in sliders %}
-        <img src={{slider.picture_url}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {{slider.name}}
+        <div>
+          <img src={{slider.picture_url}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{slider.name}}
+        </div>
+
       {% endfor %}
     </div>
   </div>
