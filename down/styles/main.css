@@ -16,7 +16,7 @@ h1{
 }
 
 body{
-  
+
   text-align: center;
   text-decoration: none;
 }
@@ -34,7 +34,9 @@ div.container {
 }
 .rightSide {
   width: 30%;
-	padding: 10%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 textarea {
