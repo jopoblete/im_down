@@ -9,6 +9,7 @@
   </head>
   <body>
 
+
     <h1>SlideThru</h1>
 
     <div class="space"></div>
@@ -49,25 +50,7 @@
         {%endif%}
 
         {{post.text}}
-        <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
-          {% if post.date.hour-7 > 12 %}
-            {{post.date.hour-7-12}}:
-          {% elif post.date.hour-7 < 7 %}
-            {{post.date.hour-7+12}}:
-          {% else %}
-              {{post.date.hour-7}}:
-            {% endif %}
-            {% if post.date.minute < 10 %}
-              0{{post.date.minute}}
-            {% else %}
-              {{post.date.minute}}
-            {% endif %}
-            {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
-              pm
-            {% else %}
-              am
-            {% endif %}
-          </div>
+        <br>
           Sliders: {{post.slideCount}}
             {% if user.email() in post.sliderList %}
               <form class="slideButton" action="/flake" method="post">
@@ -80,6 +63,25 @@
                 <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
               </form>
             {% endif %}
+            <div class= "date" style=> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+              {% if post.date.hour-7 > 12 %}
+                {{post.date.hour-7-12}}:
+              {% elif post.date.hour-7 < 7 %}
+                {{post.date.hour-7+12}}:
+              {% else %}
+                  {{post.date.hour-7}}:
+                {% endif %}
+                {% if post.date.minute < 10 %}
+                  0{{post.date.minute}}
+                {% else %}
+                  {{post.date.minute}}
+                {% endif %}
+                {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
+                  pm
+                {% else %}
+                  am
+                {% endif %}
+              </div>
       </div class="event">
 
       </a>

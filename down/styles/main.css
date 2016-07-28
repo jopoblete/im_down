@@ -1,4 +1,4 @@
-h1{
+.slideThruTitle{
   font-size: 300%;
   font-family: Monaco, Consolas, "Lucida Console", monospace;
   color:white;
@@ -14,6 +14,23 @@ h1{
   background:-ms-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
   background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
 }
+
+/*div.h1{
+
+  font-size:100%;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+  color:white;
+  margin-top:0;
+  -moz-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fc8d83), color-stop(1, #e4685d));
+  background:-moz-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-webkit-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-o-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:-ms-linear-gradient(top, #fc8d83 5%, #e4685d 100%);
+  background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
+}*/
 
 body{
 
@@ -70,6 +87,7 @@ textarea {
 .profilePic{
   display: inline-block;
   margin-right: 30px;
+  width:200px;
 }
 .eventText{
   display: inline;
@@ -77,10 +95,8 @@ textarea {
 
 }
 
-
-
 div.event{
-  padding:20px;
+  padding:10px;
   margin-bottom:10px;
   margin-top:10px;
   border: 2px solid;
@@ -126,8 +142,8 @@ h2{
 }
 
 div.date{
-  margin-top: 5%;
   margin-left: 80%;
+  float:right;
 }
 
 a {
@@ -137,7 +153,8 @@ a {
 div.comments{
   border: 2px solid;
   width:70%;
-  height: 150px;
+  text-align:left;
+  padding: 10px;
 }
 
 textarea.commentBox{
@@ -152,6 +169,7 @@ textarea.commentBox{
 .displayName{
   font-family: Monaco, Consolas, "Lucida Console", monospace;
 }
+
 
 div.post{
   background-color: #FFD4CC;

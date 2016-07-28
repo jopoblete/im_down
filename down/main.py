@@ -155,7 +155,7 @@ class MainHandler(webapp2.RequestHandler):
             friends_posts = []
 
             for post in blog_posts:
-                if post.google_plusID in user_model.friends_list:
+                if post.google_plusID in user.friends_list:
                         friends_posts.append(post)
 
             # go through all the blog_posts and pick only the ones that were made by a friend
