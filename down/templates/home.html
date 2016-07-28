@@ -86,7 +86,6 @@
           </div>
           Sliders: {{post.slideCount}}
             {% if user.email() in post.sliderList %}
-              Logging.info("im here")
               <form class="slideButton" action="/flake" method="post">
                 <button name="submit">Flake</button>
                 <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>

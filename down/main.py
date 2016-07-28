@@ -199,6 +199,7 @@ class DeleteHandler(webapp2.RequestHandler):
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
+        sliders=[]
         user = users.get_current_user()
         user_model = getOrCreateUser(user.email())
         # Step 1: Get info from the Request
@@ -207,11 +208,13 @@ class PostHandler(webapp2.RequestHandler):
         # Step 2: Logic -- interact with the database
         key = ndb.Key(urlsafe=urlsafe_key)
         post = key.get()
+        for sliderEmail in post.sliderList:
+            slider=getOrCreateUser(sliderEmail)
+            sliders.append(slider)
 
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
-
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments} #fetch all the posts
+        template_values = {'post':post, 'comments':comments, 'sliders':sliders} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
