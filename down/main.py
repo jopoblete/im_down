@@ -129,7 +129,7 @@ class MainHandler(webapp2.RequestHandler):
 
             # go through all the blog_posts and pick only the ones that were made by a friend
 
-            template_values = {'posts':blog_posts, 'plus_user':plus_user} #fetch all the posts
+            template_values = {'posts':blog_posts, 'plus_user':plus_user, 'user':user} #fetch all the posts
 
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
@@ -143,22 +143,11 @@ class MainHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(name = user_model.name, text=text, user_key=user_model.key, slideCount=0)
+        post = Post(name = user_model.name, text=text, user_key=user_model.key, slideCount=0, sliderList=[])
 
         post.put()
         # Step 3: Render a response
         self.redirect('/home')
-
-    def slideIn(self):
-        user = users.get_current_user()
-        user_model = getOrCreateUser(user.email())
-        post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
-        post = post_key.get()
-        post.slideCount=post.slideCount+1
-        post.put()
-        self.redirect('/home')
-
-
 
 class DeleteHandler(webapp2.RequestHandler):
     def post(self):
@@ -202,12 +191,45 @@ class PostHandler(webapp2.RequestHandler):
         # Step 3: Render a response
         self.redirect(post.url())
 
+class SlideThruHandler(webapp2.RequestHandler):
+    @decorator.oauth_required
+    def post(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
+        urlsafe_key = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        post = key.get()
+        post.slideCount=post.slideCount+1
+        post.sliderList.append(user.email())
+        post.put()
+        template = jinja_environment.get_template('home.html')
+        self.response.write(template.render({'post':post, 'email':user.email()}))
+        self.redirect('/home')
+
+class FlakeHandler(webapp2.RequestHandler):
+    @decorator.oauth_required
+    def post(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
+        urlsafe_key = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        post = key.get()
+        post.slideCount=post.slideCount-1
+        i=post.sliderList.index(user.email())
+        del post.sliderList[i]
+        post.put()
+        template = jinja_environment.get_template('home.html')
+        self.response.write(template.render({'post':post, 'email':user.email()}))
+        self.redirect('/home')
+
 
 app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),
+    ('/slideThru', SlideThruHandler),
+    ('/flake', FlakeHandler),
     (decorator.callback_path, decorator.callback_handler())
 
 ], debug=True)

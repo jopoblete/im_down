@@ -56,16 +56,17 @@
       <div class="event">
 
         {%if plus_user['displayName'] == post.user_key.get().name%}
-        <form action="/delete" method="post">
-          <button name="delete">X</button>
-          <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
-          <br>
-        </form>
+        <div class="divForDeleteButton">
+          <form action="/delete" method="post">
+            <button class="deleteButton" name="delete">X</button>
+            <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+            <br>
+          </form>
+        </div>
         {%endif%}
 
         {{post.text}}
         <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
-          &nbsp;&nbsp;
           {% if post.date.hour-7 > 12 %}
             {{post.date.hour-7-12}}:
           {% elif post.date.hour-7 < 7 %}
@@ -84,9 +85,19 @@
               am
             {% endif %}
           </div>
-          <form action="/home" method="slideIn">
-            <button type="slidein" name="button">Slide in</button>
-          </form>
+          Sliders: {{post.slideCount}}
+            {% if user.email() in post.sliderList %}
+              Logging.info("im here")
+              <form class="slideButton" action="/flake" method="post">
+                <button name="submit">Flake</button>
+                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+              </form>
+            {% else %}
+              <form class="slideButton" action="/slideThru" method="post">
+                <button name="submit">Slide Thru</button>
+                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+              </form>
+            {% endif %}
       </div class="event">
 
       </a>

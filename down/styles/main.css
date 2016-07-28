@@ -80,7 +80,6 @@ div.event{
   border: 2px solid;
   border-radius: 20px;
   width:40%;
-  height: 15%;
   color:black;
   text-align:left;
   word-wrap: break-word;
@@ -102,7 +101,19 @@ div.eventClicked{
   display:inline-block;
   background-color: white;
 }
+.slideButton{
+  display:inline-block;
+  width:150%;
+}
 
+.deleteButton{
+  float:right;
+  padding:1% 2%;
+}
+
+.divForDeleteButton{
+
+}
 
 h2{
   clear:both;
@@ -165,7 +176,7 @@ button{
 	font-family:Arial;
 	font-size:15px;
 	font-weight:bold;
-	padding:6px 24px;
+	padding:1% 2%;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #b23e35;
 }
