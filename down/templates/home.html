@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Slide Thru</title>
+    <title>SlideThru</title>
     <link rel='stylesheet' href='styles/main.css'>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
   </head>
   <body>
+
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
@@ -19,7 +20,7 @@
     }(document, 'script', 'facebook-jssdk'));
     </script>
 
-    <h1> Slide Thru</h1>
+    <h1>SlideThru</h1>
 
 
 
@@ -27,8 +28,6 @@
     <!-- FACEBOOK JAVASCRIPT -->
     <!-- <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div> -->
       <!-- FACEBOOK JAVASCRIPT -->
-
-
 
     <div class="post">
       <form action="/home" method="post">
@@ -55,6 +54,14 @@
 
       <div class="event">
 
+        {%if plus_user['displayName'] == post.user_key.get().name%}
+        <form action="/delete" method="post">
+          <button name="delete">X</button>
+          <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+          <br>
+        </form>
+        {%endif%}
+
         {{post.text}}
         <div class= "date"> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
           &nbsp;&nbsp;
@@ -76,7 +83,7 @@
               am
             {% endif %}
           </div>
-          <form action="/" method="post">
+          <form action="/home" method="slideIn">
             <button type="slidein" name="button">Slide in</button>
           </form>
       </div class="event">

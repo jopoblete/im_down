@@ -34,7 +34,7 @@ div.container {
 }
 .rightSide {
   width: 30%;
-	padding: 10px;
+	padding: 10%;
 }
 
 textarea {
@@ -64,7 +64,7 @@ textarea {
 }
 .profilePic{
   display: inline-block;
-  margin-right: 3%;
+  margin-right: 30px;
 }
 .eventText{
   display: inline;
@@ -133,7 +133,9 @@ textarea.commentBox{
 .commentSpace{
   width:100%;
 }
-
+.displayName{
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+}
 
 div.post{
   background-color: #FFD4CC;

@@ -66,6 +66,7 @@ class User(ndb.Model): #give u a user object and the plus user if logged in
     friends_list = ndb.StringProperty(repeated=True)
 
 
+
     def url(self):
         url='/user?key='+self.key.urlsafe()
         return url
@@ -77,6 +78,8 @@ class Post(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
     google_plusID = ndb.StringProperty()
     user_key=ndb.KeyProperty(kind=User)
+    slideCount=ndb.IntegerProperty()
+    sliderList=ndb.StringProperty(repeated=True)
 
     def url(self):
         return '/post?key='+ self.key.urlsafe() #you need to use self, not post.key.blah
@@ -91,9 +94,7 @@ class Comment(ndb.Model):
 
 class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
-
-
-
+    user_key = ndb.KeyProperty(kind=User)
 
 class WelcomeHandler(webapp2.RequestHandler):
 
@@ -170,14 +171,31 @@ class MainHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('text')
         # Step 2: Logic -- interact with the database
-        post = Post(name = user_model.name, text=text, user_key=user_model.key, google_plusID= plus_user['id'])
+
+        post = Post(name = user_model.name, text=text, user_key=user_model.key, google_plusID= plus_user['id'], slideCount = 0)
         #google_plusID property takes current user ID and attaches it to the new post
 
         post.put()
-
         # Step 3: Render a response
         self.redirect('/home')
 
+    def slideIn(self):
+        user = users.get_current_user()
+        user_model = getOrCreateUser(user.email())
+        post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
+        post = post_key.get()
+        post.slideCount=post.slideCount+1
+        post.put()
+        self.redirect('/home')
+
+
+
+class DeleteHandler(webapp2.RequestHandler):
+    def post(self):
+        urlsafe_key = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        key.delete()
+        self.redirect('/home')
 
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
@@ -204,7 +222,6 @@ class PostHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('comment') #the comment string
         post_key_urlsafe = self.request.get('key') #string thats coming out of the request
-
         # Step 2: Logic -- interact with the database
         post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
         post = post_key.get() #turns into the entity ( the post )
@@ -215,10 +232,12 @@ class PostHandler(webapp2.RequestHandler):
         # Step 3: Render a response
         self.redirect(post.url())
 
+
 app = webapp2.WSGIApplication([
     ('/', WelcomeHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
+    ('/delete', DeleteHandler),
     (decorator.callback_path, decorator.callback_handler())
 
 ], debug=True)
