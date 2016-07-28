@@ -68,9 +68,7 @@ class Comment(ndb.Model):
 
 class SlideIn(ndb.Model):
     post_key = ndb.KeyProperty(kind=Post)
-
-
-
+    user_key = ndb.KeyProperty(kind=User)
 
 class WelcomeHandler(webapp2.RequestHandler):
 
@@ -170,7 +168,6 @@ class PostHandler(webapp2.RequestHandler):
         # Step 1: Get info from the Request
         text = self.request.get('comment') #the comment string
         post_key_urlsafe = self.request.get('key') #string thats coming out of the request
-
         # Step 2: Logic -- interact with the database
         post_key = ndb.Key(urlsafe=post_key_urlsafe) #go from a string to a key
         post = post_key.get() #turns into the entity ( the post )
