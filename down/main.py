@@ -195,13 +195,20 @@ class DeleteHandler(webapp2.RequestHandler):
 
 class DeleteCommentHandler(webapp2.RequestHandler):
     def post(self):
-        post_urlsafe_key = self.request.get('postkey')
+        # Where is this key coming from?
+        # It should be in the form somewhere,
+        # similar to how the commentkey is done
+        urlsafe_key = self.request.get('key')
+        # Added a log to see what the value of the key is.
+        # It was empty
+        #logging.info("urlsafe_key: " + urlsafe_key)
+        key = ndb.Key(urlsafe=urlsafe_key)
+        post = key.get()
+
         comment_urlsafe_key = self.request.get('commentkey')
         key = ndb.Key(urlsafe=comment_urlsafe_key)
         key.delete()
-        # post_key = ndb.Key(urlsafe=post_urlsafe_key)
-        # post = post_key.get()
-        # self.redirect(/)
+        self.redirect(post.url())
 
 
 class PostHandler(webapp2.RequestHandler):
@@ -223,7 +230,7 @@ class PostHandler(webapp2.RequestHandler):
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
         # Step 3: Render a response
 
-        template_values = {'post':post, 'comments':comments, 'sliders':sliders} #fetch all the posts
+        template_values = {'post':post, 'comments':comments, 'sliders':sliders, 'user':user} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
