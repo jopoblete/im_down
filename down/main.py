@@ -155,7 +155,7 @@ class MainHandler(webapp2.RequestHandler):
             friends_posts = []
 
             for post in blog_posts:
-                if post.google_plusID in user_model.friends_list:
+                if post.google_plusID in user.friends_list:
                         friends_posts.append(post)
 
             # go through all the blog_posts and pick only the ones that were made by a friend
@@ -193,6 +193,24 @@ class DeleteHandler(webapp2.RequestHandler):
         key.delete()
         self.redirect('/home')
 
+class DeleteCommentHandler(webapp2.RequestHandler):
+    def post(self):
+        # Where is this key coming from?
+        # It should be in the form somewhere,
+        # similar to how the commentkey is done
+        urlsafe_key = self.request.get('key')
+        # Added a log to see what the value of the key is.
+        # It was empty
+        #logging.info("urlsafe_key: " + urlsafe_key)
+        key = ndb.Key(urlsafe=urlsafe_key)
+        post = key.get()
+
+        comment_urlsafe_key = self.request.get('commentkey')
+        key = ndb.Key(urlsafe=comment_urlsafe_key)
+        key.delete()
+        self.redirect(post.url())
+
+
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
@@ -211,7 +229,8 @@ class PostHandler(webapp2.RequestHandler):
 
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments, 'sliders':sliders} #fetch all the posts
+
+        template_values = {'post':post, 'comments':comments, 'sliders':sliders, 'user':user} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
@@ -268,6 +287,7 @@ app = webapp2.WSGIApplication([
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),
+    ('/deletecomment', DeleteCommentHandler),
     ('/slideThru', SlideThruHandler),
     ('/flake', FlakeHandler),
     (decorator.callback_path, decorator.callback_handler())
