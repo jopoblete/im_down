@@ -51,52 +51,40 @@
       <br> <br>
       {% for comment in comments %}
         <div class='comments'>
-<<<<<<< HEAD
           <div>
-=======
-            {%if user.email() == comment.user_key.get().email%}
-            <div class="divForDeleteCommentButton">
-              <form action="/deletecomment" method="post">
-                <button class="deleteButton" name="delete">X</button>
-                <input type="text" name="commentkey" value="{{comment.key.urlsafe()}}" hidden>
-                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
-                <!-- Where is the post's key? -->
-                <br>
-              </form>
-            </div>
-            {%endif%}
-              <strong> {{comment.text}} </strong>
-            <br> <br> By {{comment.user_key.get().name}}
->>>>>>> 32a6f545b4ef6431353bbbee7cea6f13af8acba0
             <img src={{comment.user_key.get().picture_url}}>
             {{comment.user_key.get().name}}
-            <div class= "date"> {{comment.date.month}}/{{comment.date.day}}/{{ comment.date.year}} <br>
-                &nbsp;&nbsp;
-              {% if comment.date.hour-7 > 12 %}
-                {{comment.date.hour-7-12}}
-              {% elif comment.date.hour-7 < 7 %}
-                {{comment.date.hour-7+12}}
-              {% else %}
-                {{comment.date.hour-7}}
-              {% endif %}
-                {% if post.date.minute < 10 %}
-                  :0{{post.date.minute}}
-                {% else %}
-                  :{{post.date.minute}}
-                {% endif %}
-              {% if comment.date.hour-7 >= 12 or post.date.hour < 7 %}
-                pm
-              {% else %}
-                am
-              {% endif %}
-            </div>
+
+            <form style='display:inline'action="/deletecomment" method="post">
+                  <button class="deleteButton" name="delete">X</button>
+                  <input type="text" name="commentkey" value="{{comment.key.urlsafe()}}" hidden>
+                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+                 <!-- Where is the post's key? -->
+                  <br>
+                </form>
           </div><br>
-            <strong> {{comment.text}} </strong>
-
-
-
-
-            <br>
+          {{comment.text}}
+          <br>
+          <div class= "date"> {{comment.date.month}}/{{comment.date.day}}/{{ comment.date.year}} <br>
+              &nbsp;&nbsp;
+            {% if comment.date.hour-7 > 12 %}
+              {{comment.date.hour-7-12}}
+            {% elif comment.date.hour-7 < 7 %}
+              {{comment.date.hour-7+12}}
+            {% else %}
+              {{comment.date.hour-7}}
+            {% endif %}
+              {% if post.date.minute < 10 %}
+                :0{{post.date.minute}}
+              {% else %}
+                :{{post.date.minute}}
+              {% endif %}
+            {% if comment.date.hour-7 >= 12 or post.date.hour < 7 %}
+              pm
+            {% else %}
+              am
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     </div>
