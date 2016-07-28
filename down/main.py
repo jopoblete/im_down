@@ -223,7 +223,7 @@ class PostHandler(webapp2.RequestHandler):
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
         # Step 3: Render a response
 
-        template_values = {'post':post, 'comments':comments, 'sliders':sliders} #fetch all the posts
+        template_values = {'post':post, 'comments':comments, 'sliders':sliders, 'user':user} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
