@@ -54,7 +54,7 @@
 
       <div class="event">
 
-        {%if plus_user['displayName'] == post.user_key.get().name%}
+        {%if user.email() == post.user_key.get().email%}
         <div class="divForDeleteButton">
           <form action="/delete" method="post">
             <button class="deleteButton" name="delete">X</button>

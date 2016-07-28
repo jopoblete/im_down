@@ -11,7 +11,7 @@
     <div class='leftSide'>
       <a href="/home"><button type="goback" name="button">Go Back</button> </a>
       <div class='eventClicked'>
-
+        <input type="text" name="postkey" value="{{post.key.urlsafe()}}">
         {{post.text}}
 
         <br><br>
@@ -51,8 +51,15 @@
       <br> <br>
       {% for comment in comments %}
         <div class='comments'>
-            <h2>
-            </h2>
+            {%if user.email() == comment.user_key.get().email%}
+            <div class="divForDeleteCommentButton">
+              <form action="/deletecomment" method="post">
+                <button class="deleteButton" name="delete">X</button>
+                <input type="text" name="commentkey" value="{{comment.key.urlsafe()}}" >
+                <br>
+              </form>
+            </div>
+            {%endif%}
               <strong> {{comment.text}} </strong>
             <br> <br> By {{comment.user_key.get().name}}
             <img src={{comment.user_key.get().picture_url}}>

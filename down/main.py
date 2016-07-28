@@ -196,6 +196,17 @@ class DeleteHandler(webapp2.RequestHandler):
         key.delete()
         self.redirect('/home')
 
+class DeleteCommentHandler(webapp2.RequestHandler):
+    def post(self):
+        post_urlsafe_key = self.request.get('postkey')
+        comment_urlsafe_key = self.request.get('commentkey')
+        key = ndb.Key(urlsafe=comment_urlsafe_key)
+        key.delete()
+        # post_key = ndb.Key(urlsafe=post_urlsafe_key)
+        # post = post_key.get()
+        # self.redirect(/)
+
+
 class PostHandler(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
@@ -211,7 +222,7 @@ class PostHandler(webapp2.RequestHandler):
         comments = Comment.query(Comment.post_key == post.key).order(-Post.date).fetch()
 
         # Step 3: Render a response
-        template_values = {'post':post, 'comments':comments} #fetch all the posts
+        template_values = {'post':post, 'comments':comments, 'user':user} #fetch all the posts
         template = jinja_environment.get_template('post.html')
         self.response.write(template.render(template_values))
 
@@ -268,6 +279,7 @@ app = webapp2.WSGIApplication([
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),
+    ('/deletecomment', DeleteCommentHandler),
     ('/slideThru', SlideThruHandler),
     ('/flake', FlakeHandler),
     (decorator.callback_path, decorator.callback_handler())
