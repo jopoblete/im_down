@@ -67,7 +67,6 @@
             <br> <br> By {{comment.user_key.get().name}}
 
             <img src={{comment.user_key.get().picture_url}}>
-            {{comment.user_key.get().name}}
             <div class= "date"> {{comment.date.month}}/{{comment.date.day}}/{{ comment.date.year}} <br>
                 &nbsp;&nbsp;
               {% if comment.date.hour-7 > 12 %}
@@ -89,10 +88,6 @@
               {% endif %}
             </div>
           </div><br>
-            <strong> {{comment.text}} </strong>
-
-
-
 
             <br>
         </div>
