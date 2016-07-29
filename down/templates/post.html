@@ -90,11 +90,11 @@
             {% else %}
               {{comment.date.hour-7}}
             {% endif %}
-              {% if post.date.minute < 10 %}
-                :0{{post.date.minute}}
+              {% if comment.date.minute < 10 %}
+                :0{{comment.date.minute}}
 
               {% else %}
-                :{{post.date.minute}}
+                :{{comment.date.minute}}
               {% endif %}
 
             {% if comment.date.hour-7 >= 12 or post.date.hour < 7 %}
