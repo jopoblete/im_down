@@ -174,7 +174,7 @@ class MainHandler(webapp2.RequestHandler):
 
             # go through all the blog_posts and pick only the ones that were made by a friend
 
-            template_values = {'posts':friends_posts, 'plus_user':plus_user, 'user':user} #fetch all the posts
+            template_values = {'posts':friends_posts, 'plus_user':plus_user, 'user':user, 'logout_url':logout_url} #fetch all the posts
             template = jinja_environment.get_template('home.html')
             self.response.write(template.render(template_values))
 
