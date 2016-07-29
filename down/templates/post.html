@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>I'm Down</title>
+    <title>SlideThru</title>
     <link rel='stylesheet' href='styles/main.css'>
   </head>
   <body>
@@ -52,6 +52,7 @@
       {% for comment in comments %}
         <div class='comments'>
           <div>
+
             <img src={{comment.user_key.get().picture_url}}>
             {{comment.user_key.get().name}}
 
@@ -76,15 +77,18 @@
             {% endif %}
               {% if post.date.minute < 10 %}
                 :0{{post.date.minute}}
+
               {% else %}
                 :{{post.date.minute}}
               {% endif %}
+
             {% if comment.date.hour-7 >= 12 or post.date.hour < 7 %}
               pm
             {% else %}
               am
             {% endif %}
           </div>
+
         </div>
       {% endfor %}
     </div>
