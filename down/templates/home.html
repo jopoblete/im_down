@@ -43,19 +43,23 @@
 
 
 
-
+<table style="margin-left:10%">
     {% for post in posts %}
     <div class="wholeEvent">
-      <div class='profilePic'>
+        <tr>
+          <td>
+      <div class='profilePic' style="margin-right:-50px">
         <div class="displayName">
           {{post.user_key.get().name}}
         </div>
         <img src="{{post.user_key.get().picture_url}}" height='75px' width='75px'>
       </div>
+    </td>
+    <td>
       <div class='eventText'>
       <a href="{{post.url()}}">
 
-      <div class="event">
+      <div class="event" style="width:70%">
 
         {%if user.email() == post.user_key.get().email%}
         <div class="divForDeleteButton">
@@ -68,38 +72,55 @@
         {%endif%}
 
         {{post.text}}
-        <br>
-          Sliders: {{post.slideCount}}
-            {% if user.email() in post.sliderList %}
-              <form class="slideButton" action="/flake" method="post">
-                <button name="submit">Flake</button>
-                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
-              </form>
-            {% else %}
-              <form class="slideButton" action="/slideThru" method="post">
-                <button name="submit">Slide Thru</button>
-                <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
-              </form>
-            {% endif %}
-            <div class= "date" style=> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+        <br><br>
+        <table style="width:100%">
+          <tr>
+            <td style='padding-top:10px'>
+              <div>
+                Sliders: {{post.slideCount}}
+              </div>
+              <div>
+                {% if user.email() in post.sliderList %}
+
+                <form class="slideButton" action="/flake" method="post">
+                  <button name="submit">Flake</button>
+                  <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+                </form>
+              {% else %}
+                <form class="slideButton" action="/slideThru" method="post">
+                  <button name="submit">Slide Thru</button>
+                  <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
+                </form>
+              {% endif %}
+            </div>
+            </td>
+            <td style='padding-top:0px; padding-bottom:0px'>
+              <div class= "date" style=> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
               {% if post.date.hour-7 > 12 %}
                 {{post.date.hour-7-12}}:
               {% elif post.date.hour-7 < 7 %}
                 {{post.date.hour-7+12}}:
               {% else %}
-                  {{post.date.hour-7}}:
-                {% endif %}
-                {% if post.date.minute < 10 %}
-                  0{{post.date.minute}}
-                {% else %}
-                  {{post.date.minute}}
-                {% endif %}
-                {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
-                  pm
-                {% else %}
-                  am
-                {% endif %}
+                {{post.date.hour-7}}:
+              {% endif %}
+              {% if post.date.minute < 10 %}
+                0{{post.date.minute}}
+              {% else %}
+                {{post.date.minute}}
+              {% endif %}
+              {% if post.date.hour-7 >= 12 or post.date.hour < 7 %}
+                pm
+              {% else %}
+                am
+              {% endif %}
+            </td>
+          </tr>
+        </table>
               </div>
+
+            </td>
+          </tr>
+
       </div class="event">
 
       </a>
@@ -107,7 +128,7 @@
 </div>
 </div>
     {% endfor %}
-
+</table>
 
 
   </body>
