@@ -79,7 +79,12 @@
             </div>
             </td>
             <td style='padding-top:0px; padding-bottom:0px'>
-              <div class= "date" style=> {{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+              <div class= "date" style='width:100px'> {{post.date.month}}/{% if post.date.hour < 7 %}
+                  {{post.date.day-1}}
+                {% else %}
+                  {{post.date.day}}
+                {% endif %}
+                /{{post.date.year}} <br>
               {% if post.date.hour-7 > 12 %}
                 {{post.date.hour-7-12}}:
               {% elif post.date.hour-7 < 7 %}

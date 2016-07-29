@@ -17,7 +17,13 @@
 
         <br><br>
 
-        <div class='date'>{{post.date.month}}/{{post.date.day}}/{{ post.date.year}} <br>
+        <div class='date'>{{post.date.month}}/
+          {% if post.date.hour < 7 %}
+            {{post.date.day-1}}
+          {% else %}
+            {{post.date.day}}
+          {% endif %}
+          /{{ post.date.year}} <br>
           {% if post.date.hour-7 > 12 %}
             {{post.date.hour-7-12}}
           {% elif post.date.hour-7 < 7 %}
@@ -68,8 +74,15 @@
                 </form>
           </div><br>
           {{comment.text}}
+          {{comment.date.hour}}
           <br>
-          <div class= "date"> {{comment.date.month}}/{{comment.date.day}}/{{ comment.date.year}} <br>
+          <div class= "date"> {{comment.date.month}}/
+            {% if comment.date.hour < 7 %}
+              {{comment.date.day-1}}
+            {% else %}
+              {{comment.date.day}}
+            {% endif %}
+              /{{ comment.date.year}} <br>
               &nbsp;&nbsp;
             {% if comment.date.hour-7 > 12 %}
               {{comment.date.hour-7-12}}
