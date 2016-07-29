@@ -157,10 +157,12 @@ class MainHandler(webapp2.RequestHandler):
 
             #greeting on top of the page and signout button
             logout_url = users.create_logout_url('/')
+
             greeting = 'Welcome, {}! '.format(
                 user_model.name, logout_url)
             self.response.write(
                '<html><body>{}</body></html>'.format(greeting))
+
 
 
 
