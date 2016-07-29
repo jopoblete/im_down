@@ -51,9 +51,7 @@
       <br> <br>
       {% for comment in comments %}
         <div class='comments'>
-<<<<<<< HEAD
           <div>
-=======
             {%if user.email() == comment.user_key.get().email%}
             <div class="divForDeleteCommentButton">
               <form action="/deletecomment" method="post">
