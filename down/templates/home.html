@@ -23,23 +23,27 @@
 
 
 
-<table style="margin-left:21%">
+<table style="margin-left:18%">
     {% for post in posts %}
     <div class="wholeEvent">
         <tr>
           <td>
-      <div class='profilePic' style="margin-right:-50px">
+      <div class='profilePic' style='padding-right: 45px;
+    word-wrap: break-word;'>
         <div class="displayName">
           {{post.user_key.get().name}}
         </div>
-        <img src="{{post.user_key.get().picture_url}}" height='75px' width='75px' style=' border-radius:50px'>
+        <div style='padding-right: 65px'>
+        <img src="{{post.user_key.get().picture_url}}" height='75px' width='75px' style=' float: right;
+     border-radius:50px'>
+  </div>
       </div>
     </td>
     <td>
       <div class='eventText'>
       <a href="{{post.url()}}">
 
-      <div class="event" style="width:500px">
+      <div class="event" style="width:500px ;margin-left:-50px">
 
         {%if user.email() == post.user_key.get().email%}
         <div class="divForDeleteButton">
