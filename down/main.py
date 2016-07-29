@@ -124,6 +124,20 @@ class LoginHandler(webapp2.RequestHandler):
             # self.response.write(template.render())
 
 
+class WelcomeHandler(webapp2.RequestHandler):
+
+    def get(self):
+
+        user = users.get_current_user()
+        if user:
+            self.redirect('/home')
+
+        else:
+            login_url = users.create_login_url('/login')
+            template = jinja_environment.get_template('welcome.html')
+            self.response.write(template.render({'login_url':login_url}))
+
+
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -142,7 +156,7 @@ class MainHandler(webapp2.RequestHandler):
             user_model = getOrCreateUser(user.email())
 
             #greeting on top of the page and signout button
-            logout_url = users.create_logout_url('/home')
+            logout_url = users.create_logout_url('/')
             greeting = 'Welcome, {}! (<a href="{}">sign out</a>)'.format(
                 user_model.name, logout_url)
             self.response.write(
@@ -283,7 +297,8 @@ class FlakeHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/', LoginHandler),
+    ('/', WelcomeHandler),
+    ('/login', LoginHandler),
     ('/home', MainHandler),
     ('/post', PostHandler),
     ('/delete', DeleteHandler),
