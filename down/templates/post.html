@@ -57,11 +57,13 @@
             <img src={{comment.user_key.get().picture_url}}>
             {{comment.user_key.get().name}}
 
+            {% if user.email() == comment.user_key.get().email %}
             <form style='display:inline'action="/deletecomment" method="post">
                   <button class="deleteButton" name="delete">X</button>
                   <input type="text" name="commentkey" value="{{comment.key.urlsafe()}}" hidden>
                 <input type="text" name="key" value="{{post.key.urlsafe()}}" hidden>
                  <!-- Where is the post's key? -->
+            {% endif %}
                   <br>
                 </form>
           </div><br>
